@@ -1,9 +1,6 @@
 package route
 
 import (
-	// integlocalstorage "codebase-app/internal/integration/localstorage"
-	// m "codebase-app/internal/middleware"
-
 	integration "codebase-app/internal/integration/oauth2google"
 	restUser "codebase-app/internal/module/user/handler/rest"
 	"codebase-app/pkg/response"
