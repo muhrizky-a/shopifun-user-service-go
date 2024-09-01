@@ -1,6 +1,5 @@
 # files to ignore
 .env
-digihub-app
 
 # directories to ignore
 .idea
@@ -11,5 +10,3 @@ tmp
 
 # executables to ignore
 main.exe
-crowners-app.exe
-crowners-app

@@ -10,6 +10,8 @@ type RegisterRequest struct {
 
 type RegisterResponse struct {
 	Id string `json:"id"`
+	// Name string `json:"name"`
+	// Image multipart.FileHeader `json:"id"`
 }
 
 type LoginRequest struct {

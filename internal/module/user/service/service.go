@@ -2,6 +2,7 @@ package service
 
 import (
 	integOauth "codebase-app/internal/integration/oauth2google"
+	oauthgoogleent "codebase-app/internal/integration/oauth2google/entity"
 	"codebase-app/internal/module/user/entity"
 	"codebase-app/internal/module/user/ports"
 	"codebase-app/pkg"
@@ -85,4 +86,32 @@ func (s *userService) GetOauthGoogleUrl(ctx context.Context) (string, error) {
 	url := s.o.GetUrl("state")
 
 	return url, nil
+}
+
+func (s *userService) LoginGoogle(ctx context.Context, req *oauthgoogleent.UserInfoResponse) (*entity.LoginResponse, error) {
+	var res = new(entity.LoginResponse)
+
+	user, err := s.repo.FindByEmail(ctx, req.Email)
+	if err != nil {
+		if errCustom, ok := err.(*errmsg.CustomError); ok {
+			if errCustom.Code != 400 {
+				return nil, err
+			} else {
+				return nil, errmsg.NewCustomErrors(404, errmsg.WithMessage("Email belum terdaftar"))
+			}
+		}
+		return nil, err
+	}
+
+	token, err := jwthandler.GenerateTokenString(jwthandler.CostumClaimsPayload{
+		UserId:          user.Id,
+		Role:            user.Role,
+		TokenExpiration: time.Now().Add(time.Hour * 24),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	res.Token = token
+	return res, nil
 }
